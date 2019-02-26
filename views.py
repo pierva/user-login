@@ -8,6 +8,11 @@ from flask import Flask
 
 engine = create_engine('sqlite:///users.db')
 
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+app = Flask(__name__)
+
 @app.route('/users', methods=['POST'])
 def new_user():
     username = request.json.get('username')
@@ -24,10 +29,6 @@ def new_user():
     return jsonify({'username': user.username}), 201
 
 
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-app = Flask(__name__)
 
 if __name__ == '__main__':
     app.debug = True
