@@ -9,6 +9,20 @@ from flask import Flask
 engine = create_engine('sqlite:///users.db')
 
 @app.route('/users', methods=['POST'])
+def new_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None:
+        abort(400) #missing arguments
+    if session.query(User).filter_by(username=username).first() is not Note:
+        # User already exists
+        abort(400)
+    user = User(username = username)
+    user.hash_password(password)
+    session.add(user)
+    session.commit()
+    return jsonify({'username': user.username}), 201
+
 
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
