@@ -1,5 +1,5 @@
 from models import Base, User
-from flask import Flask, jsonify, request, url_for, abort
+from flask import Flask, jsonify, request, url_for, abort, g
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
@@ -37,12 +37,19 @@ def new_user():
     session.commit()
     return jsonify({'username': user.username}), 201
 
+
 @app.route('/api/users/<int:id>')
 def get_user(id):
     user = session.query(User).filter_by(id=id).one()
     if not user:
         abort(400)
     return jsonify({'username': user.username})
+
+
+@app.route('/api/resource')
+@auth.login_required
+def get_resource():
+    return jsonify({ 'data': 'Hello, %s!' % g.user.username })
 
 if __name__ == '__main__':
     app.debug = True
