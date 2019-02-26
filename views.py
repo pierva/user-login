@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
 from flask_httpauth import HTTPBasicAuth
 
+auth = HTTPBasicAuth()
+
 engine = create_engine('sqlite:///users.db')
 
 Base.metadata.bind = engine
