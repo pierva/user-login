@@ -37,7 +37,12 @@ def new_user():
     session.commit()
     return jsonify({'username': user.username}), 201
 
-
+@app.route('/api/users/<int:id>')
+def get_user(id):
+    user = session.query(User).filter_by(id=id).one()
+    if not user:
+        abort(400)
+    return jsonify({'username': user.username})
 
 if __name__ == '__main__':
     app.debug = True
